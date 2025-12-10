@@ -1,4 +1,7 @@
-use core::marker::PhantomData;
+use core::{
+    convert::{TryFrom, TryInto},
+    marker::PhantomData,
+};
 
 /// Host to Card commands
 pub struct Cmd<R: Resp> {
@@ -24,18 +27,25 @@ pub struct R3;
 
 pub trait Resp {
     const LENGTH: ResponseLen = ResponseLen::R48;
+    type Word: From<u32> + TryFrom<u64> + TryFrom<u128> + Into<u128> + TryInto<u64> + TryInto<u32>;
 }
 
 impl Resp for Rz {
     const LENGTH: ResponseLen = ResponseLen::Zero;
+    type Word = u32;
 }
 
 impl Resp for R2 {
     const LENGTH: ResponseLen = ResponseLen::R136;
+    type Word = u128;
 }
 
-impl Resp for R1 {}
-impl Resp for R3 {}
+impl Resp for R1 {
+    type Word = u32;
+}
+impl Resp for R3 {
+    type Word = u32;
+}
 
 /// Command Response type
 #[derive(Eq, PartialEq, Copy, Clone)]
