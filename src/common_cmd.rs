@@ -1,5 +1,6 @@
 use core::{
     convert::{TryFrom, TryInto},
+    fmt::Debug,
     marker::PhantomData,
 };
 
@@ -27,7 +28,12 @@ pub struct R3;
 
 pub trait Resp {
     const LENGTH: ResponseLen = ResponseLen::R48;
-    type Word: From<u32> + TryFrom<u64> + TryFrom<u128> + Into<u128> + TryInto<u64> + TryInto<u32>;
+    type Word: From<u32>
+        + TryFrom<u64, Error: Debug>
+        + TryFrom<u128, Error: Debug>
+        + Into<u128>
+        + TryInto<u64, Error: Debug>
+        + TryInto<u32, Error: Debug>;
 }
 
 impl Resp for Rz {
