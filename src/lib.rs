@@ -1230,7 +1230,7 @@ impl<A: Addressable, B: MmcBus, D: DelayNs, const BLOCK_SIZE: usize>
         self.error = true;
         if blocks.len() == 1 {
             self.read_block(block_address, &mut blocks[0]).await?;
-        } else if blocks.len() > 0 {
+        } else if !blocks.is_empty() {
             self.read_blocks(block_address, blocks).await?;
         }
         self.error = false;
@@ -1253,7 +1253,7 @@ impl<A: Addressable, B: MmcBus, D: DelayNs, const BLOCK_SIZE: usize>
         self.error = true;
         if blocks.len() == 1 {
             self.write_block(block_address, &blocks[0]).await?;
-        } else if blocks.len() > 0 {
+        } else if !blocks.is_empty() {
             self.write_blocks(block_address, blocks).await?;
         }
         self.error = false;
